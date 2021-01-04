@@ -445,7 +445,8 @@ static InitFunction initFunction([]()
 
 			TicketData ticketData;
 
-			if (!lanVar->GetValue())
+			// Removes ticket validation
+			/*if (!lanVar->GetValue())
 			{
 				auto ticketIt = postMap.find("cfxTicket");
 
@@ -478,7 +479,7 @@ static InitFunction initFunction([]()
 					sendError(fmt::sprintf("Parsing error while verifying CitizenFX ticket. %s", e.what()));
 					return;
 				}
-			}
+			}*/
 
 			std::string token = boost::uuids::to_string(boost::uuids::basic_random_generator<boost::random_device>()());
 
@@ -557,6 +558,8 @@ static InitFunction initFunction([]()
 			{
 				gameNameMatch = true;
 			}
+
+			gameNameMatch = true; // forced
 
 			if (!gameNameMatch)
 			{

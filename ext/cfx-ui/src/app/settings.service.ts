@@ -85,14 +85,14 @@ export class SettingsService {
 			category: '#SettingsCat_Interface'
 		})
 
-		this.addSetting('devMode', {
+		/*this.addSetting('devMode', {
 			name: '#Settings_DevMode',
 			description: '#Settings_DevModeDesc',
 			type: 'checkbox',
 			getCb: () => this.gameService.devModeChange.map(a => a ? 'true' : 'false'),
 			setCb: (value) => this.gameService.devMode = (value === 'true'),
 			category: '#SettingsCat_Interface',
-		});
+		});*/
 
 		this.addSetting('localhostPort', {
 			name: '#Settings_LocalhostPort',
@@ -155,7 +155,7 @@ export class SettingsService {
 			});
 		}
 
-		this.addSetting('queriesPerMinute', {
+		/*this.addSetting('queriesPerMinute', {
 			name: '#Settings_QueriesPerMinute',
 			type: 'switch',
 			getCb: () => this.gameService.getConvar('ui_maxQueriesPerMinute'),
@@ -170,7 +170,7 @@ export class SettingsService {
 				'250': '250',
 			},
 			category: '#SettingsCat_Connection',
-		});
+		});*/
 
 		this.addSetting('connectedProfiles', {
 			name: '#Settings_ConnectedProfiles',
@@ -248,7 +248,7 @@ export class SettingsService {
 				category: '#SettingsCat_Account',
 			});
 
-			this.addSetting('updateChannel', {
+			/*this.addSetting('updateChannel', {
 				name: '#Settings_UpdateChannel',
 				description: '#Settings_UpdateChannelDesc',
 				type: 'switch',
@@ -259,7 +259,7 @@ export class SettingsService {
 					'canary': 'Canary (Experimental/Unstable)',
 				},
 				category: '#SettingsCat_Game',
-			});
+			});*/
 		}
 	}
 

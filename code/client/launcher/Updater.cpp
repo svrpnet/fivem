@@ -286,7 +286,11 @@ bool Updater_RunUpdate(int numCaches, ...)
 
 		if (fileOutdated)
 		{
-			const char* url = va(CONTENT_URL "/%s/content/%s/%s%s?hash=%s", GetUpdateChannel(), cache.name.c_str(), file.name.c_str(), (file.compressed) ? ".xz" : "", formattedHash.str());
+			// escape space -> +
+			std::string filename = file.name;
+			std::replace(filename.begin(), filename.end(), ' ', '+');
+
+			const char* url = va(CONTENT_URL "/%s/content/%s/%s%s?hash=%s", GetUpdateChannel(), cache.name.c_str(), filename, (file.compressed) ? ".xz" : "", formattedHash.str());
 
 			std::string outPath = converter.to_bytes(MakeRelativeCitPath(converter.from_bytes(file.name)));
 
@@ -314,11 +318,11 @@ bool Updater_RunUpdate(int numCaches, ...)
 		// both still cause this detection.
 
 		FILE* outCachesFile = _wfopen(MakeRelativeCitPath(L"caches.xml").c_str(), L"w");
-		
+
 		if (outCachesFile)
 		{
 			fprintf(outCachesFile, "<Caches>\n");
-			
+
 			for (cache_t& cache : cacheFile.GetCaches())
 			{
 				fprintf(outCachesFile, "\t<Cache ID=\"%s\" Version=\"%d\" />\n", cache.name.c_str(), cache.version);

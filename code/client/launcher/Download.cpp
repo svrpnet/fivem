@@ -7,6 +7,8 @@
 
 #include "StdInc.h"
 
+#include "LauncherConfig.h"
+
 #ifdef LAUNCHER_PERSONALITY_MAIN
 #include <CfxLocale.h>
 
@@ -87,7 +89,7 @@ struct dlState
 
 	bool downloadInitialized;
 	CURLM* curl;
-	
+
 	bool isDownloading;
 	bool error;
 
@@ -107,7 +109,7 @@ void CL_InitDownloadQueue()
 	dls.bytesPerSecond = 0;
 	dls.totalBytes = 0;
 	dls.doneTotalBytes = 0;
-	
+
 	std::queue<std::shared_ptr<download_t>> empty;
 	std::swap(dls.downloadQueue, empty);
 }
@@ -121,11 +123,11 @@ void CL_QueueDownload(const char* url, const char* file, int64_t size, bool comp
 
 void CL_QueueDownload(const char* url, const char* file, int64_t size, bool compressed, int segments)
 {
-	if (strcmp(url, "https://runtime.fivem.net/patches/GTA_V_Patch_1_0_1604_0.exe") == 0)
+	if (std::string(url).find("_1604") != std::string::npos)
 	{
 		for (int i = 0; i <= 9; i++)
 		{
-			CL_QueueDownload(va("https://mirrors.fivem.net/emergency_mirror/GTAV1604.exe%02d", i), va("%s.%d", file, i), i == 9 ? 87584200 : 104857600, false, 1);
+			CL_QueueDownload(va(SVRP_DOWNLOAD_MIRROR "GTAV1604.exe%02d", i), va("%s.%d", file, i), i == 9 ? 87584200 : 104857600, false, 1);
 		}
 
 		return;
@@ -798,12 +800,12 @@ bool DL_Process()
 			return true;
 		}
 	}
-	
+
 	if (dls.downloadQueue.size() > 0)
 	{
 		DL_DequeueDownload();
 	}
-	
+
 	if (dls.downloadQueue.empty() && dls.currentDownloads.empty())
 	{
 		return true;

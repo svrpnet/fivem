@@ -1329,81 +1329,38 @@ concurrency::task<void> NetLibrary::ConnectToServer(const std::string& rootUrl)
 
 										OnConnectionProgress("Requesting server feature policy...", 0, 100);
 
-										if (info.is_object() && info["vars"].is_object())
+										auto val = info["vars"].value("sv_licenseKeyToken", "");
+
+
+										trace("! Manually setting policies");
+
+										// We manually insert the policy features
+										std::set<std::string> policies;
+										policies.insert("color_server_names");
+										policies.insert("mumble_voice_prerelease");
+										policies.insert("new_interior_hash");
+										policies.insert("onesync");
+										policies.insert("onesync_big");
+										policies.insert("onesync_medium");
+										policies.insert("onesync_plus");
+										policies.insert("platinum");
+										policies.insert("subdir_file_mapping");
+
+										// format policy string and store it
+										std::stringstream policyStr;
+
+										for (const auto& line : policies)
 										{
-											auto val = info["vars"].value("sv_licenseKeyToken", "");
-
-											if (!val.empty())
-											{
-												m_httpClient->DoGetRequest(fmt::sprintf("https://policy-live.fivem.net/api/policy/%s", val), [=](bool success, const char* data, size_t size)
-												{
-													std::set<std::string> policies;
-
-													// process policy response
-													if (success)
-													{
-														try
-														{
-															json doc = json::parse(data, data + size);
-
-															if (doc.is_array())
-															{
-																for (auto& entry : doc)
-																{
-																	if (entry.is_string())
-																	{
-																		policies.insert(entry.get<std::string>());
-																	}
-																}
-															}
-														}
-														catch (const std::exception&)
-														{
-														}
-													}
-
-													// add forced policies
-													if (maxClients <= 8)
-													{
-														// development/testing servers (<= 8 clients max) get subdir_file_mapping granted
-														policies.insert("subdir_file_mapping");
-													}
-
-													// format policy string and store it
-													std::stringstream policyStr;
-
-													for (const auto& line : policies)
-													{
-														policyStr << "[" << line << "]";
-													}
-
-													std::string policy = policyStr.str();
-
-													if (!policy.empty())
-													{
-														trace("Server feature policy is %s\n", policy);
-													}
-
-													Instance<ICoreGameInit>::Get()->SetData("policy", policy);
-
-													// check 1s policy
-													if (Instance<ICoreGameInit>::Get()->OneSyncEnabled && !onesyncType.empty())
-													{
-														if (policies.find(onesyncType) == policies.end())
-														{
-															oneSyncPolicyFailure();
-															return;
-														}
-													}
-
-													policySuccess();
-												});
-
-												return;
-											}
+											policyStr << "[" << line << "]";
 										}
 
+										std::string policy = policyStr.str();
+
+										trace("Server feature policy is %s\n", policy);
+										Instance<ICoreGameInit>::Get()->SetData("policy", policy);
+
 										policySuccess();
+										return;
 									}
 									catch (std::exception& e)
 									{
@@ -1455,7 +1412,7 @@ concurrency::task<void> NetLibrary::ConnectToServer(const std::string& rootUrl)
 
 						OnConnectionProgress("Requesting server permissions...", 0, 100);
 
-						m_httpClient->DoGetRequest(fmt::sprintf("https://runtime.fivem.net/blacklist/%s", address.GetHost()), blacklistResultHandler);
+						//m_httpClient->DoGetRequest(fmt::sprintf("https://runtime.fivem.net/blacklist/%s", address.GetHost()), blacklistResultHandler);
 
 						if (node.value("netlibVersion", 1) == 2)
 						{
@@ -1473,6 +1430,8 @@ concurrency::task<void> NetLibrary::ConnectToServer(const std::string& rootUrl)
 							m_connectionState = CS_IDLE;
 							return true;
 						}
+
+						continueAfterAllowance();
 					}
 					catch (std::exception& e)
 					{

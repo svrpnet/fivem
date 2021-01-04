@@ -934,60 +934,6 @@ static InitFunction initFunction([] ()
 
 static void ProtocolRegister()
 {
-#ifdef GTA_FIVE
-	LSTATUS result;
-
-#define CHECK_STATUS(x) \
-	result = (x); \
-	if (result != ERROR_SUCCESS) { \
-		trace("[Protocol Registration] " #x " failed: %x", result); \
-		return; \
-	}
-
-	HKEY key;
-	wchar_t path[MAX_PATH];
-	wchar_t command[1024];
-
-	GetModuleFileNameW(NULL, path, sizeof(path));
-	swprintf_s(command, L"\"%s\" \"%%1\"", path);
-
-	CHECK_STATUS(RegCreateKeyW(HKEY_CURRENT_USER, L"SOFTWARE\\Classes\\fivem", &key));
-	CHECK_STATUS(RegSetValueExW(key, NULL, 0, REG_SZ, (BYTE*)L"FiveM", 6 * 2));
-	CHECK_STATUS(RegSetValueExW(key, L"URL Protocol", 0, REG_SZ, (BYTE*)L"", 1 * 2));
-	CHECK_STATUS(RegCloseKey(key));
-
-	CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\Classes\\FiveM.ProtocolHandler", &key));
-	CHECK_STATUS(RegSetValueExW(key, NULL, 0, REG_SZ, (BYTE*)L"FiveM", 6 * 2));
-	CHECK_STATUS(RegCloseKey(key));
-
-	CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\FiveM", &key));
-	CHECK_STATUS(RegCloseKey(key));
-
-	CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\FiveM\\Capabilities", &key));
-	CHECK_STATUS(RegSetValueExW(key, L"ApplicationName", 0, REG_SZ, (BYTE*)L"FiveM", 6 * 2));
-	CHECK_STATUS(RegSetValueExW(key, L"ApplicationDescription", 0, REG_SZ, (BYTE*)L"FiveM", 6 * 2));
-	CHECK_STATUS(RegCloseKey(key));
-
-	CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\FiveM\\Capabilities\\URLAssociations", &key));
-	CHECK_STATUS(RegSetValueExW(key, L"fivem", 0, REG_SZ, (BYTE*)L"FiveM.ProtocolHandler", 22 * 2));
-	CHECK_STATUS(RegCloseKey(key));
-
-	CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\RegisteredApplications", &key));
-	CHECK_STATUS(RegSetValueExW(key, L"FiveM", 0, REG_SZ, (BYTE*)L"Software\\FiveM\\Capabilities", 28 * 2));
-	CHECK_STATUS(RegCloseKey(key));
-
-	CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\Classes\\FiveM.ProtocolHandler\\shell\\open\\command", &key));
-	CHECK_STATUS(RegSetValueExW(key, NULL, 0, REG_SZ, (BYTE*)command, (wcslen(command) * sizeof(wchar_t)) + 2));
-	CHECK_STATUS(RegCloseKey(key));
-
-	if (!IsWindows8Point1OrGreater())
-	{
-		// these are for compatibility on downlevel Windows systems
-		CHECK_STATUS(RegCreateKey(HKEY_CURRENT_USER, L"SOFTWARE\\Classes\\fivem\\shell\\open\\command", &key));
-		CHECK_STATUS(RegSetValueExW(key, NULL, 0, REG_SZ, (BYTE*)command, (wcslen(command) * sizeof(wchar_t)) + 2));
-		CHECK_STATUS(RegCloseKey(key));
-	}
-#endif
 }
 
 void Component_RunPreInit()

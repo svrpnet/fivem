@@ -188,6 +188,9 @@ void Install_Uninstall(const wchar_t* directory)
 
 bool Install_PerformInstallation()
 {
+	MessageBox(nullptr, L"This product does not support installation.\nPlease, put " PRODUCT_NAME L".exe into an empty folder instead.", PRODUCT_NAME, MB_OK | MB_ICONINFORMATION);
+	return false;
+
 	auto rootPath = GetRootPath();
 
 	if (rootPath.empty())
@@ -217,7 +220,7 @@ bool Install_PerformInstallation()
 
 			return true;
 		}
-		
+
 		return false;
 	};
 
@@ -258,7 +261,7 @@ bool Install_PerformInstallation()
 			shellLink->SetPath(targetExePath.c_str());
 			shellLink->SetDescription(PRODUCT_NAME L" is a modification framework based on the Cfx.re platform");
 			shellLink->SetIconLocation(targetExePath.c_str(), 0);
-			
+
 			SetAumid(shellLink);
 
 			WRL::ComPtr<IPersistFile> persist;

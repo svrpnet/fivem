@@ -2,7 +2,7 @@
 	<div class="oi">
 		<div class="left">
 			<ul class="links">
-				<li (click)="openLink('https://fivem.net')" aria-label="Opens in browser" data-balloon-pos="right" *ngIf="gameName == 'gta5'">
+				<!--<li (click)="openLink('https://fivem.net')" aria-label="Opens in browser" data-balloon-pos="right" *ngIf="gameName == 'gta5'">
 					FiveM.net
 				</li>
 				<li (click)="openLink('https://redm.gg')" aria-label="Opens in browser" data-balloon-pos="right" *ngIf="gameName == 'rdr3'">
@@ -13,20 +13,20 @@
 				</li>
 				<li (click)="openLink('https://patreon.com/fivem')" aria-label="Opens in browser" data-balloon-pos="right">
 					Patreon
-				</li>
+				</li>-->
 			</ul>
 
 			<!--Template for content: <div class="danger|warning">Shit <a href="shit">meh</a></div>-->
-			<div
+			<!--<div
 				class="service-message with-links"
 				(click)="serviceMessageClick($event)"
 				*ngIf="serviceMessage"
 				[innerHTML]="serviceMessage"
 			>
-			</div>
+			</div>-->
 		</div>
 		<div class="right" *ngIf="gameName != 'rdr3'">
-			<div class="player-stats" *ngIf="playerStats">
+			<!--<div class="player-stats" *ngIf="playerStats">
 				<div
 					aria-label="Current players count"
 					data-balloon-pos="left"
@@ -43,157 +43,14 @@
 				*ngIf="currentAccount && !streamerMode"
 				[style.backgroundImage]="currentAccount.getAvatarUrlForCss()"
 				class="userpic"
-			></div>
+			></div>-->
 		</div>
 	</div>
 
-	<div class="layout">
-		<div class="play">
-			<a class="card servers_link" [routerLink]="['/servers']">
-				<div class="top">
-					<h1 class="card_title">
-						<svg>
-							<use [attr.xlink:href]="'#logo-' + gameName"></use>
-						</svg>
-						<span l10nTranslate>
-							#BottomNav_Play
-						</span>
-					</h1>
-					<div *ngIf="currentAccount" class="nickname">
-						Welcome back, {{ currentAccount.username }}
-					</div>
-				</div>
-				<div class="memeing">
-					<article [innerHTML]="welcomeMessage" (click)="clickContent($event)">
-					</article>
-				</div>
-			</a>
+<br>
+FiveM™ is © by the <a href="#" (click)="openLink('https://fivem.net')">CitizenFX Collective.</a><br>
+Source code for this custom binary release can be found <a href="#" (click)="openLink('https://github.com/svrpnet/fivem')">here</a>.
+<br><br>
+There isn't much to see on this screen besides legal compliance information, the SVRP launcher will automatically connect you to the city.
 
-			<div class="last-server" *ngIf="lastServer" (click)="attemptConnectTo(lastServer)">
-				<div class="content">
-					<figure class="icon">
-						<img [src]="lastServer.sanitizedIcon || 'http://picsum.photos/96/96'">
-					</figure>
-					<div class="title" [innerHTML]="(lastServer.historyEntry.hostname)||'test' | escape | colorize"></div>
-					<span class="players" *ngIf="lastServer.server">
-						{{lastServer.server.currentPlayers}}<span class="max">/{{lastServer.server.maxPlayers}}</span>
-					</span>
-				</div>
-				<div class="info">
-					<span
-						class="status"
-						[class.loading]="lastServer.status === HistoryServerStatus.Loading"
-						[class.online]="lastServer.status === HistoryServerStatus.Online"
-						[class.offline]="lastServer.status === HistoryServerStatus.Offline"
-					>
-						{{HistoryServerStatus[lastServer.status]}}
-					</span>
-
-					<span class="time">
-						{{ '#DirectConnect_LastPlayed' | translate:locale.language }}:
-						{{ lastServer.historyEntry.time | amTimeAgo }}
-					</span>
-				</div>
-			</div>
-		</div>
-
-		<div class="links">
-			<a [routerLink]="['/servers/premium']" class="nav-item subnav-item" routerLinkActive="active"
-				*ngIf="gameName !== 'rdr3'">
-				<span class="material-icons-outlined supporters">monetization_on</span>
-				<span l10nTranslate>
-					#ServerList_Premium
-				</span>
-			</a>
-			<a [routerLink]="['/servers/history']" class="nav-item subnav-item" routerLinkActive="active">
-				<span class="material-icons-outlined history">history</span>
-				<span l10nTranslate>
-					#ServerList_History
-				</span>
-			</a>
-			<a [routerLink]="['/servers/favorites']" class="nav-item subnav-item" routerLinkActive="active"
-				*ngIf="gameName !== 'rdr3'">
-				<span class="material-icons-outlined favorites">grade</span>
-				<span l10nTranslate>
-					#ServerList_Favorites
-				</span>
-			</a>
-			<a class="nav-item subnav-item" (click)="connectToLocal()" *ngIf="devMode">
-				<span class="material-icons-outlined localhost">computer</span>
-				<span>
-					Localhost
-				</span>
-			</a>
-		</div>
-
-		<a class="card ad"
-			[routerLink]="[(this.topServer) ? '/servers/detail/' + this.topServer.address : '']"
-			style="--banner-image: url({{this.topServer?.data?.vars?.banner_detail || 'nah'}})">
-			<div *ngIf="this.topServer">
-				<h3 class="card_title">
-					<span class="material-icons-outlined">trending_up</span>
-					<span *ngIf="!this.currentAccount">AD: </span>
-					<span [innerHTML]="(this.topServer && this.topServer.hostname)||'test' | escape | colorize"></span>
-				</h3>
-
-				<section>
-					<div>
-						<span [class]="'flag-icon flag-icon-' + this.topServer.data.vars.locale.split('-')[1].toLowerCase()"></span>
-					</div>
-
-					<div>
-						<span class="material-icons-outlined">group</span>
-						{{(this.topServer && this.topServer.currentPlayers)||0}}<span class="capacity">/{{(this.topServer && this.topServer.maxPlayers)||32}}</span>
-					</div>
-
-					<div>
-						<span class="material-icons-outlined">arrow_upward</span>
-						{{(this.topServer && this.topServer.upvotePower)||0}}
-					</div>
-					
-					<span *ngIf="!this.currentAccount" l10nTranslate>
-						#Home_AdDetail
-					</span>
-				</section>
-			</div>
-		</a>
-
-		<a class="card story" [routerLink]="['/story']" *ngIf="gameName !== 'rdr3'">
-			<h3 class="card_title">
-				<span class="material-icons-outlined">play_arrow</span>
-				<span l10nTranslate>#BottomNav_Story</span>
-			</h3>
-			<p>
-				Play GTA V story mode in FiveM, with addons loaded, FiveM's engine improvements and seamless integration.
-				<br/>
-				You can place saved games in %USERPROFILE%\Saved Games\CitizenFX\GTA5.
-			</p>
-		</a>
-
-		<a class="card replay" [routerLink]="['/editor']" routerLinkActive="active" *ngIf="gameName !== 'rdr3'">
-			<h3 class="card_title">
-				<span class="material-icons-outlined">replay</span>
-				<span l10nTranslate>
-					#BottomNav_ReplayEditor
-				</span>
-			</h3>
-		</a>
-
-		<div class="create">
-			<app-create-home></app-create-home>
-		</div>
-
-		<div class="tweets community">
-			<div class="title">Community</div>
-			<app-home-tweet class="message" actuallyTweet="true" *ngFor="let tweet of communityTweets" [tweet]="tweet">
-			</app-home-tweet>
-		</div>
-
-		<div class="tweets official">
-			<div class="title" *ngIf="gameName === 'gta5'">FiveM Official</div>
-			<div class="title" *ngIf="gameName !== 'gta5'">Cfx.re Official</div>
-			<app-home-tweet class="message" actuallyTweet="true" *ngFor="let tweet of officialTweets" [tweet]="tweet">
-			</app-home-tweet>
-		</div>
-	</div>
 </div>

@@ -22,8 +22,9 @@
 #define GAME_EXECUTABLE L"MaxPayne3.exe"
 #elif defined(GTA_FIVE)
 #define PRODUCT_NAME L"FiveM"
-#define CONTENT_URL "https://mirrors.fivem.net/client"
-#define CONTENT_URL_WIDE L"https://mirrors.fivem.net/client"
+#define CONTENT_URL "https://download.svrp.net/client"
+#define CONTENT_URL_WIDE L"https://download.svrp.net/client"
+#define SVRP_DOWNLOAD_MIRROR "https://download.svrp.net/data/"
 #define GAME_EXECUTABLE L"GTA5.exe"
 #elif defined(IS_RDR3)
 #define PRODUCT_NAME L"RedM"

@@ -155,7 +155,8 @@ static InitFunction initFunction([]()
 
 		instance->GetComponent<fx::GameServer>()->OnTick.Connect([instance]()
 		{
-			if (!setNucleusSuccess && (!setNucleus || (msec() > setNucleusTimeout)))
+			// Disable nucleus authentication and manually force success state
+			/*if (!setNucleusSuccess && (!setNucleus || (msec() > setNucleusTimeout)))
 			{
 				auto var = instance->GetComponent<console::Context>()->GetVariableManager()->FindEntryRaw("sv_licenseKeyToken");
 
@@ -226,7 +227,10 @@ static InitFunction initFunction([]()
 
 					setNucleus = true;
 				}
-			}
+			}*/
+
+			setNucleusSuccess = true;
+			setNucleus = true;
 		});
 	}, INT32_MAX);
 });
